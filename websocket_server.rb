@@ -22,7 +22,6 @@ class ServerApp
                 end
 
                 ws.onmessage do |event|
-
                 end
 
                 ws.onclose do
@@ -40,10 +39,14 @@ class ServerApp
     end
 
     def check_for_updates
-        new_data = @file.read
-        return if new_data.empty?
+        begin
+            new_data = @file.read
+            return if new_data.empty?
 
-        @clients.each{|client| client.send new_data }
+            @clients.each{|client| client.send new_data }
+        rescue StandardError => e
+            puts "Unable to load file , error : #{e.message}"
+        end
     end
 end
 
