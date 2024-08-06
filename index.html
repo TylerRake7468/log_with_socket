@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Viewer</title>
+    <style>
+        #log {
+            font-family: monospace;
+            white-space: pre-wrap; /* Preserve whitespace and newlines */
+            height: 500px;
+            overflow-y: auto;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Log Viewer</h1>
+    <div id="log"></div>
+
+    <script>
+        var ws = new WebSocket("ws://localhost:8080");
+
+        var logEle = document.getElementById("log");
+        ws.onopen = function(){
+            console.log('Connected to server');
+        }
+
+        ws.onmessage = function(event){
+            console.log("event:", event.data);
+            var newLog = event.data;
+            // logEle.textContent += newLog + "</br>";
+            logEle.innerHTML += newLog + "<br>";
+            logEle.scrollTop = logEle.scrollHeight;
+        }
+
+        ws.onclose = function(){
+            console.log("Disconnected from server.");
+        }
+    </script>
+</body>
+</html>
